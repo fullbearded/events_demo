@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 source 'https://gems.ruby-china.org'
 
 gem 'mysql2', '>= 0.3.18', '< 0.5'
@@ -14,6 +12,9 @@ gem 'uglifier', '>= 1.3.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'jbuilder', '~> 2.5'
 gem 'turbolinks', '~> 5'
+
+
+gem 'sorcery'
 
 group :development do
   gem 'listen', '~> 3.1.5'

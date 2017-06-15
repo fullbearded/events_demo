@@ -1,3 +1,5 @@
+Style/FrozenStringLiteralComment:
+  Enabled: false
 Style/BlockComments:
   Enabled: false
 Style/AsciiComments:
