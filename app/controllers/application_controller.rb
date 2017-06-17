@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
 
   # 管理后台未登录跳转
   def not_authenticated
-    halt!('继续操作前，请登录！', :login)
+    halt!(I18n.t :please_login, :login)
   end
 
   def format_page

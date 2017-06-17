@@ -4,8 +4,8 @@ class CreateEvents < ActiveRecord::Migration[5.0]
       t.string :uid, null: false, default: '', limit: 32, comment: 'unique id'
       t.references :resource, polymorphic: true, index: true, comment: 'event resources'
       t.integer :action, null: false, default: 0, limit: 1, comment: 'resource action, such as todo assign etc.'
-      t.string :user_uid, null: false, default: '', comment: 'event author, user creater'
-      t.string :project_uid, null: false, default: '', comment: 'redundancy column, project_uid'
+      t.references :user, null: false, default: 0, comment: 'event author, user creater'
+      t.references :project, null: false, default: 0, comment: 'belongs_to project'
       t.timestamps
     end
   end

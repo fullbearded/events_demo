@@ -1,5 +1,13 @@
 zh-CN:
+  please_login: 继续操作前，请登录！
   default_todolist: 任务
+  add: 创建
+  remove: 删除
+  move: 移动
+  close: 完成
+  reopen: 重新打开
+  assign: 指派
+  rename: 重命名
   
 
 

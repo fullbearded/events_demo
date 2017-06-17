@@ -20,7 +20,7 @@ if Rails.env.development?
   # 2. import teams
   %w(superman spider_man).each do |name|
     team = Team.find_or_initialize_by name: name
-    team.creator = user
+    team.operator = user
     team.save
   end
 
@@ -56,6 +56,11 @@ if Rails.env.development?
   commenter = User.find_by name: 'tom'
   todo.generate_comments! commenter, content: 'I love superman'
 
+
+  # 8. events traces
+  # 8.1 remove todo
+  todo.operator = user
+  todo.destroy
 
 
 end

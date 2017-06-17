@@ -40,8 +40,10 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.integer  "user_id",                  default: 0,  null: false
     t.integer  "todo_id",                  default: 0,  null: false
     t.text     "content",    limit: 65535
+    t.datetime "deleted_at"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.index ["deleted_at"], name: "index_comments_on_deleted_at", using: :btree
     t.index ["todo_id"], name: "index_comments_on_todo_id", using: :btree
     t.index ["user_id"], name: "index_comments_on_user_id", using: :btree
   end
@@ -58,11 +60,13 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.string   "resource_type"
     t.integer  "resource_id",                                        comment: "event resources"
     t.integer  "action",        limit: 1,  default: 0,  null: false, comment: "resource action, such as todo assign etc."
-    t.string   "user_uid",                 default: "", null: false, comment: "event author, user creater"
-    t.string   "project_uid",              default: "", null: false, comment: "redundancy column, project_uid"
+    t.integer  "user_id",                  default: 0,  null: false, comment: "event author, user creater"
+    t.integer  "project_id",               default: 0,  null: false, comment: "belongs_to project"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.index ["project_id"], name: "index_events_on_project_id", using: :btree
     t.index ["resource_type", "resource_id"], name: "index_events_on_resource_type_and_resource_id", using: :btree
+    t.index ["user_id"], name: "index_events_on_user_id", using: :btree
   end
 
   create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -78,6 +82,8 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.string   "team_uid",       limit: 32,  default: "",    null: false, comment: "redundancy column, team_uid"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_projects_on_deleted_at", using: :btree
     t.index ["team_id", "name"], name: "index_projects_on_team_id_and_name", unique: true, using: :btree
     t.index ["team_id"], name: "index_projects_on_team_id", using: :btree
     t.index ["user_id"], name: "index_projects_on_user_id", using: :btree
@@ -119,8 +125,10 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.string   "name",       limit: 50, default: "", null: false
     t.integer  "project_id",            default: 0,  null: false
     t.integer  "user_id",               default: 0,  null: false, comment: "create user"
+    t.datetime "deleted_at"
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
+    t.index ["deleted_at"], name: "index_todolists_on_deleted_at", using: :btree
     t.index ["project_id"], name: "index_todolists_on_project_id", using: :btree
     t.index ["user_id"], name: "index_todolists_on_user_id", using: :btree
   end
@@ -136,8 +144,10 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.integer  "project_id",                default: 0,  null: false
     t.string   "project_uid",               default: "", null: false, comment: "redundancy column, project_uid"
     t.integer  "tag_id",                    default: 0,  null: false
+    t.datetime "deleted_at"
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
+    t.index ["deleted_at"], name: "index_todos_on_deleted_at", using: :btree
     t.index ["project_id"], name: "index_todos_on_project_id", using: :btree
     t.index ["tag_id"], name: "index_todos_on_tag_id", using: :btree
     t.index ["todolist_id"], name: "index_todos_on_todolist_id", using: :btree

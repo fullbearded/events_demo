@@ -1,0 +1,18 @@
+<div class="container events pt100">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tr>
+        <th>操作人</th>
+        <th>事件</th>
+        <th>资源</th>
+      </tr>
+      <% @events && @events.each do |event| %>
+        <tr>
+          <th><%= event.user.name %></th>
+          <th><%= t event.action %></th>
+          <th><%= event.resource %></th>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

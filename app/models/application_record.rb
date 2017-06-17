@@ -19,8 +19,10 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
-  def trigger_add_event(opts = {})
-    self.events.add.build(opts).save
+  %w(add remove).each do |action|
+    define_method "trigger_#{action}_event" do |opts = {}|
+      self.events.send(action).build(opts).save
+    end
   end
-  
+
 end
