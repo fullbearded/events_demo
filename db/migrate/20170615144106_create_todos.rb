@@ -2,7 +2,7 @@ class CreateTodos < ActiveRecord::Migration[5.0]
   def change
     create_table :todos, comment: 'the todo tasks' do |t|
       t.string :uid, null: false, default: '', limit: 32, comment: 'unique id'
-      t.string :title, null: false, default: '', comment: 'task title'
+      t.string :name, null: false, default: '', comment: 'name'
       t.text :description
       t.integer :priority, null: false, default: 0, comment: 'task priority'
       t.integer :status, null: false, default: 0, comment: '0 active 1 finished'

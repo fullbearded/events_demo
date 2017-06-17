@@ -1,5 +1,5 @@
 class Comment < ApplicationRecord
-  acts_as_paranoid
+  acts_as_paranoid without_default_scope: true
 
   has_many :attachments, class_name: 'Attachment', as: :attachable
   belongs_to :user

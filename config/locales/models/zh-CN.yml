@@ -9,6 +9,8 @@ zh-CN:
         reopen: 重新打开
         assign: 指派
         rename: 重命名
+        edit: 编辑
+        reply: 回复
   activerecord:
     models:
       project: 项目
@@ -20,7 +22,4 @@ zh-CN:
     attributes:
       project:
         name: 项目名
-
-  
-
 

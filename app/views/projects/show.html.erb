@@ -24,7 +24,7 @@
       <% @project.todolists.present? && @project.todolists.first.todos.each do |todo| %>
         <tr>
           <th><%= todo.user.name %></th>
-          <th><%= todo.title %></th>
+          <th><%= todo.name %></th>
           <th><%= todo.description %></th>
           <th><%= link_to '查看', project_todo_path(@project, todo) %></th>
         </tr>

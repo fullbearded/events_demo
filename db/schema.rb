@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 20170616083652) do
 
   create_table "todos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "the todo tasks" do |t|
     t.string   "uid",         limit: 32,    default: "", null: false, comment: "unique id"
-    t.string   "title",                     default: "", null: false, comment: "task title"
+    t.string   "name",                      default: "", null: false, comment: "name"
     t.text     "description", limit: 65535
     t.integer  "priority",                  default: 0,  null: false, comment: "task priority"
     t.integer  "status",                    default: 0,  null: false, comment: "0 active 1 finished"

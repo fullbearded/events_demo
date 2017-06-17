@@ -43,11 +43,11 @@ if Rails.env.development?
   todolist = Project.find_by(name: 'zod').todolists.first
   author = User.find_by name: 'jerry'
   todolist.generate_todos!(author, {
-    title: 'Genering zod kill by superman',
+    name: 'Genering zod kill by superman',
     description: 'Genering zod kill by superman in earth'
   })
   todolist.generate_todos!(author, {
-    title: 'Genering zod release',
+    name: 'Genering zod release',
     description: 'because of krypton destroyed, Genering zod released from prison'
   })
 

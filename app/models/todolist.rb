@@ -1,5 +1,5 @@
 class Todolist < ApplicationRecord
-  acts_as_paranoid
+  acts_as_paranoid without_default_scope: true
 
   has_many :todos
   belongs_to :project

@@ -4,13 +4,15 @@
       <tr>
         <th>操作人</th>
         <th>事件</th>
-        <th>操作内容</th>
+        <th>操作对象</th>
+        <th>评论</th>
       </tr>
       <% @events && @events.each do |event| %>
         <tr>
           <th><%= event.user.name %></th>
-          <th><%= event.action_i18n %></th>
-          <th><%= event.resource_type.constantize.model_name.human %> : <%= event.resource %></th>
+          <th><%= event.action_display %>了<%= event.resource_display %></th>
+          <th><%= event.resource_display %>： <%= event.resource_detail[:name] %></th>
+          <th><%= event.resource_detail[:content] %></th>
         </tr>
       <% end %>
     </table>
