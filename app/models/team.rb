@@ -7,7 +7,7 @@ class Team < ApplicationRecord
 
   has_many :events, as: :resource
   attr_accessor :operator
-  after_save -> (obj) { trigger_add_event user_id: obj.operator.id }
+  after_save -> (obj) { trigger_add_event user_id: obj.operator.try(:id).to_i }
 
   validates_presence_of :name
 

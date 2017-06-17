@@ -1,0 +1,26 @@
+zh-CN:
+  enums:
+    event:
+      action:
+        add: 创建
+        remove: 删除
+        move: 移动
+        close: 完成
+        reopen: 重新打开
+        assign: 指派
+        rename: 重命名
+  activerecord:
+    models:
+      project: 项目
+      todo: 任务
+      todolist: 任务清单
+      team: 团队
+      event: 动态
+      comment: 评论
+    attributes:
+      project:
+        name: 项目名
+
+  
+
+

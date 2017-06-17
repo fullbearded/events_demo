@@ -4,13 +4,13 @@
       <tr>
         <th>操作人</th>
         <th>事件</th>
-        <th>资源</th>
+        <th>操作内容</th>
       </tr>
       <% @events && @events.each do |event| %>
         <tr>
           <th><%= event.user.name %></th>
-          <th><%= t event.action %></th>
-          <th><%= event.resource %></th>
+          <th><%= event.action_i18n %></th>
+          <th><%= event.resource_type.constantize.model_name.human %> : <%= event.resource %></th>
         </tr>
       <% end %>
     </table>

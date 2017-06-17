@@ -18,7 +18,7 @@ gem 'sorcery'
 
 gem 'bootstrap-sass', '~> 3.3.6'
 gem "paranoia", "~> 2.2"
-
+gem 'enum_help'
 
 group :development do
   gem 'listen', '~> 3.1.5'

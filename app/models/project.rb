@@ -5,13 +5,15 @@ class Project < ApplicationRecord
   has_many :todolists
   has_many :todos
 
+  validates_presence_of :name
+
   has_many :events, as: :resource
   attr_accessor :operator
-  after_save -> (obj) {
-    trigger_add_event user_id: obj.operator.id, project_id: obj.id
+  after_create -> (obj) {
+    trigger_add_event user_id: obj.operator.try(:id).to_i, project_id: obj.id
   }
   after_destroy -> (obj) {
-    trigger_remove_event user_id: obj.operator.id, project_id: obj.id
+    trigger_remove_event user_id: obj.operator.try(:id).to_i, project_id: obj.id
   }
 
   def generate_default_todolist!
