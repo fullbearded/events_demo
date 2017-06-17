@@ -1,4 +1,6 @@
 class Comment < ApplicationRecord
+  acts_as_paranoid
+  
   has_many :attachments, class_name: 'Attachment', as: :attachable
   belongs_to :user
   belongs_to :todo

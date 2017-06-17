@@ -13,7 +13,9 @@ class CreateProjects < ActiveRecord::Migration[5.0]
       t.references :team, null: false, default: 0
       t.string :team_uid, null: false, default: '', limit: 32, comment: 'redundancy column, team_uid'
       t.timestamps null: false
+      t.datetime :deleted_at
     end
     add_index :projects, [:team_id, :name], unique: true
+    add_index :projects, :deleted_at
   end
 end

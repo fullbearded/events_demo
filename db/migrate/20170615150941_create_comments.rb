@@ -5,7 +5,9 @@ class CreateComments < ActiveRecord::Migration[5.0]
       t.references :user, null: false, default: 0
       t.references :todo, null: false, default: 0
       t.text :content
+      t.datetime :deleted_at
       t.timestamps
     end
+    add_index :comments, :deleted_at
   end
 end

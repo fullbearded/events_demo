@@ -1,4 +1,6 @@
 class Todo < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :project
   belongs_to :tag
   has_many :comments

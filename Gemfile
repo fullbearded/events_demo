@@ -17,7 +17,7 @@ gem 'kaminari'
 gem 'sorcery'
 
 gem 'bootstrap-sass', '~> 3.3.6'
-gem 'rails_param', '0.9.0'
+gem "paranoia", "~> 2.2"
 
 
 group :development do

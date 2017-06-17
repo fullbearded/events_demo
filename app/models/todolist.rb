@@ -1,4 +1,6 @@
 class Todolist < ApplicationRecord
+  acts_as_paranoid
+
   has_many :todos
   belongs_to :project
   belongs_to :user

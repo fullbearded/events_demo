@@ -12,7 +12,9 @@ class CreateTodos < ActiveRecord::Migration[5.0]
       t.references :project, null: false, default: 0
       t.string :project_uid, null: false, default: '', comment: 'redundancy column, project_uid'
       t.references :tag, null: false, default: 0
+      t.datetime :deleted_at
       t.timestamps
     end
+    add_index :todos, :deleted_at
   end
 end
