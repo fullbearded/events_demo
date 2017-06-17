@@ -10,13 +10,59 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170615150941) do
+ActiveRecord::Schema.define(version: 20170616083652) do
+
+  create_table "accesses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "user for project permission" do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.integer  "role_id_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_accesses_on_project_id", using: :btree
+    t.index ["role_id_id"], name: "index_accesses_on_role_id_id", using: :btree
+    t.index ["user_id"], name: "index_accesses_on_user_id", using: :btree
+  end
+
+  create_table "attachments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "uid",             limit: 32, default: "", null: false, comment: "unique id"
+    t.string   "name",                       default: "", null: false, comment: "attachemnt file name"
+    t.string   "url",                        default: "", null: false, comment: "attachement url: this is relative url"
+    t.integer  "category",                   default: 0,  null: false, comment: "category 0 image 1 download file"
+    t.string   "attachable_type"
+    t.integer  "attachable_id",                                        comment: "every model: has_many :ref_nam, as: :attachable"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.index ["attachable_type", "attachable_id"], name: "index_attachments_on_attachable_type_and_attachable_id", using: :btree
+  end
 
   create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "uid",        limit: 32,    default: "", null: false, comment: "unique id"
+    t.integer  "user_id",                  default: 0,  null: false
+    t.integer  "todo_id",                  default: 0,  null: false
     t.text     "content",    limit: 65535
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.index ["todo_id"], name: "index_comments_on_todo_id", using: :btree
+    t.index ["user_id"], name: "index_comments_on_user_id", using: :btree
+  end
+
+  create_table "event_assigners", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "assigner_id", default: 0, null: false
+    t.integer  "assignee_id", default: 0, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "uid",           limit: 32, default: "", null: false, comment: "unique id"
+    t.string   "resource_type"
+    t.integer  "resource_id",                                        comment: "event resources"
+    t.integer  "action",        limit: 1,  default: 0,  null: false, comment: "resource action, such as todo assign etc."
+    t.string   "user_uid",                 default: "", null: false, comment: "event author, user creater"
+    t.string   "project_uid",              default: "", null: false, comment: "redundancy column, project_uid"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.index ["resource_type", "resource_id"], name: "index_events_on_resource_type_and_resource_id", using: :btree
   end
 
   create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -27,26 +73,27 @@ ActiveRecord::Schema.define(version: 20170615150941) do
     t.integer  "project_type",               default: 0,     null: false, comment: "project type: 0 standard, 1 pipeline"
     t.boolean  "publishable",                default: false, null: false, comment: "everyone can visit project"
     t.integer  "team_id",                    default: 0,     null: false
+    t.string   "team_uid",       limit: 32,  default: "",    null: false, comment: "redundancy column, team_uid"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
+    t.index ["team_id", "name"], name: "index_projects_on_team_id_and_name", unique: true, using: :btree
     t.index ["team_id"], name: "index_projects_on_team_id", using: :btree
   end
 
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "uid",        limit: 32, default: "", null: false, comment: "unique id"
     t.string   "name"
-    t.string   "resource_type"
-    t.integer  "resource_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.index ["name"], name: "index_roles_on_name", using: :btree
   end
 
   create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "name",       default: "", null: false
-    t.integer  "team_id",    default: 0,  null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.string   "uid",        limit: 32, default: "", null: false, comment: "unique id"
+    t.string   "name",                  default: "", null: false
+    t.integer  "team_id",               default: 0,  null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.index ["team_id"], name: "index_tags_on_team_id", using: :btree
   end
 
@@ -60,20 +107,38 @@ ActiveRecord::Schema.define(version: 20170615150941) do
   create_table "teams_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "team_id", null: false
     t.integer "user_id", null: false
-    t.index ["team_id", "user_id"], name: "index_teams_users_on_team_id_and_user_id", using: :btree
-    t.index ["user_id", "team_id"], name: "index_teams_users_on_user_id_and_team_id", using: :btree
+    t.index ["team_id", "user_id"], name: "index_teams_users_on_team_id_and_user_id", unique: true, using: :btree
+    t.index ["user_id", "team_id"], name: "index_teams_users_on_user_id_and_team_id", unique: true, using: :btree
   end
 
-  create_table "todos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "the tasks" do |t|
+  create_table "todolists", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "uid",        limit: 32, default: "", null: false
+    t.string   "name",       limit: 50, default: "", null: false
+    t.integer  "project_id",            default: 0,  null: false
+    t.integer  "user_id",               default: 0,  null: false, comment: "create user"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.index ["project_id"], name: "index_todolists_on_project_id", using: :btree
+    t.index ["user_id"], name: "index_todolists_on_user_id", using: :btree
+  end
+
+  create_table "todos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "the todo tasks" do |t|
+    t.string   "uid",         limit: 32,    default: "", null: false, comment: "unique id"
     t.string   "title",                     default: "", null: false, comment: "task title"
     t.text     "description", limit: 65535
     t.integer  "priority",                  default: 0,  null: false, comment: "task priority"
+    t.integer  "status",                    default: 0,  null: false, comment: "0 active 1 finished"
+    t.integer  "user_id",                   default: 0,  null: false, comment: "create user"
+    t.integer  "todolist_id",               default: 0,  null: false
     t.integer  "project_id",                default: 0,  null: false
+    t.string   "project_uid",               default: "", null: false, comment: "redundancy column, project_uid"
     t.integer  "tag_id",                    default: 0,  null: false
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
     t.index ["project_id"], name: "index_todos_on_project_id", using: :btree
     t.index ["tag_id"], name: "index_todos_on_tag_id", using: :btree
+    t.index ["todolist_id"], name: "index_todos_on_todolist_id", using: :btree
+    t.index ["user_id"], name: "index_todos_on_user_id", using: :btree
   end
 
   create_table "user_groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "user group" do |t|
@@ -91,19 +156,13 @@ ActiveRecord::Schema.define(version: 20170615150941) do
     t.string   "email",            limit: 100, default: "", null: false, comment: "user email"
     t.string   "mobile",           limit: 11,  default: "", null: false, comment: "user mobile"
     t.string   "remark",                       default: "", null: false, comment: "user remark"
-    t.integer  "team_id",                      default: 0,  null: false
+    t.integer  "status",           limit: 1,   default: 0,  null: false, comment: "user status, 0 active 1 ban"
     t.integer  "user_group_id",                default: 0,  null: false
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
-    t.index ["team_id"], name: "index_users_on_team_id", using: :btree
+    t.index ["mobile"], name: "index_users_on_mobile", unique: true, using: :btree
     t.index ["user_group_id"], name: "index_users_on_user_group_id", using: :btree
-  end
-
-  create_table "users_roles", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "user_id"
-    t.integer "role_id"
-    t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
   end
 
 end

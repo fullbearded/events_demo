@@ -10,10 +10,13 @@ class SorceryCore < ActiveRecord::Migration[5.0]
       t.string :mobile, null: false, default: '', limit: 11, comment: 'user mobile'
       t.string :remark, null: false, default: '', limit: 255, comment: 'user remark'
 
+      t.integer :status, null: false, default: 0, limit: 1, comment: 'user status, 0 active 1 ban'
+
       t.references :user_group, null: false, default: 0
       t.timestamps null: false
     end
 
     add_index :users, :email, unique: true
+    add_index :users, :mobile, unique: true
   end
 end

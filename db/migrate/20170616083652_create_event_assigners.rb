@@ -1,0 +1,9 @@
+class CreateEventAssigners < ActiveRecord::Migration[5.0]
+  def change
+    create_table :event_assigners do |t|
+      t.integer :assigner_id, null: false, default: 0
+      t.integer :assignee_id, null: false, default: 0
+      t.timestamps
+    end
+  end
+end

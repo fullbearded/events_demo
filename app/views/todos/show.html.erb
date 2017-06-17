@@ -1,0 +1,22 @@
+<div class="container todo pt100">
+  <div class="table-responsive">
+    <div class="row">
+      <div class="col-sm-12">任务名:<%= @todo.title %></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">描述:<%= @todo.description %></div>
+    </div>
+    <table class="table table-striped">
+      <tr>
+        <th>评论人</th>
+        <th>内容</th>
+      </tr>
+      <% @todo && @todo.comments.each do |comment| %>
+        <tr>
+          <th><%= comment.user.name %></th>
+          <th><%= comment.content %></th>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

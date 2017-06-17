@@ -1,0 +1,2 @@
+class EventAssigner < ApplicationRecord
+end

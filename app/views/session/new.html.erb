@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Demo</title>
+  <%= stylesheet_link_tag 'login' %>
+</head>
+<body class="signin">
+<section>
+
+  <div class="signinpanel">
+    <div class="row">
+      <div class="col-md-7">
+        <% if flash.present? %>
+          <div class="alert alert-<%= flash.keys.first %>">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <strong><%= flash.to_h.values.join %></strong>
+          </div>
+        <% end %>
+
+      </div>
+      <!-- col-sm-7 -->
+
+      <div class="col-md-5">
+        <%= form_tag login_path, id: 'login-form', novalidate: 'novalidate' do %>
+          <h4 class="nomargin">登陆</h4>
+
+          <p class="mt5 mb20">登陆你的账户</p>
+
+          <input type="text" name="username" id="username" class="form-control uname" placeholder="手机号 / 邮箱" autofocus="true" required>
+          <input type="password" name="password" id="password" class="form-control pword" placeholder="请输入密码" required>
+          <!--<a href=""><small>Forgot Your Password?</small></a>-->
+          <button class="btn btn-success btn-block">登陆</button>
+        <% end %>
+      </div>
+      <!-- col-sm-5 -->
+
+    </div>
+    <!-- row -->
+
+    <div class="signup-footer"></div>
+
+  </div>
+  <!-- signin -->
+</section>
+<%= javascript_include_tag 'login' %>
+</body>
+
+</html>

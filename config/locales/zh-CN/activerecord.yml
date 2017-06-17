@@ -1,0 +1,9 @@
+zh-CN:
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            password:
+              too_short: 密码过短（最短为 %{count} 个字符）
+

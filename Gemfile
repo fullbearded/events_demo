@@ -13,8 +13,11 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jbuilder', '~> 2.5'
 gem 'turbolinks', '~> 5'
 
-
+gem 'kaminari'
 gem 'sorcery'
+
+gem 'bootstrap-sass', '~> 3.3.6'
+
 
 group :development do
   gem 'listen', '~> 3.1.5'

@@ -8,8 +8,10 @@ class CreateProjects < ActiveRecord::Migration[5.0]
       t.integer :project_type, null: false, default: 0, comment: 'project type: 0 standard, 1 pipeline'
       t.boolean :publishable, null: false, default: false, comment: 'everyone can visit project'
 
-      t.references :team, null: false, default: 0
+      t.references :team, null: false, default: 0, primary_key: :team_uid
+      t.string :team_uid, null: false, default: '', limit: 32, comment: 'redundancy column, team_uid'
       t.timestamps null: false
     end
+    add_index :projects, [:team_id, :name], unique: true
   end
 end

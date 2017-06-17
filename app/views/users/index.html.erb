@@ -1,0 +1,18 @@
+<div class="container users pt100">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tr>
+        <th>姓名</th>
+        <th>邮箱</th>
+        <th>电话号码</th>
+      </tr>
+      <% @users && @users.each do |user| %>
+        <tr>
+          <th><%= user.name %></th>
+          <th><%= user.email %></th>
+          <th><%= user.mobile %></th>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
