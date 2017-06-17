@@ -18,5 +18,9 @@ class ApplicationRecord < ActiveRecord::Base
       block.call if block.present?
     end
   end
+
+  def trigger_add_event(opts = {})
+    self.events.add.build(opts).save
+  end
   
 end

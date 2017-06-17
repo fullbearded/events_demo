@@ -6,11 +6,16 @@ class Team < ApplicationRecord
   has_many :tags
 
   has_many :events, as: :resource
+  attr_accessor :creator
+  after_save -> (obj) { trigger_add_event user_uid: obj.creator.uid }
 
-  def generate_project!(name, opts = {})
+  validates_presence_of :name
+
+  def generate_project!(user, opts = {})
     keep_transaction do
-      project = projects.create({name: name, team_uid: uid}.merge(opts))
-      project.generate_default_todolist!
+      attrs = {team_uid: uid, user_id: user.id, user_uid: user.uid, creator: user}.merge(opts)
+      project = projects.new(attrs)
+      project.generate_default_todolist! if project.save!
     end
   end
 

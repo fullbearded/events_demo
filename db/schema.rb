@@ -72,12 +72,15 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.boolean  "guest_lockable",             default: false, null: false, comment: "hide sensitive content"
     t.integer  "project_type",               default: 0,     null: false, comment: "project type: 0 standard, 1 pipeline"
     t.boolean  "publishable",                default: false, null: false, comment: "everyone can visit project"
+    t.integer  "user_id",                    default: 0,     null: false
+    t.string   "user_uid",       limit: 32,  default: "",    null: false, comment: "redundancy column, user_uid"
     t.integer  "team_id",                    default: 0,     null: false
     t.string   "team_uid",       limit: 32,  default: "",    null: false, comment: "redundancy column, team_uid"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
     t.index ["team_id", "name"], name: "index_projects_on_team_id_and_name", unique: true, using: :btree
     t.index ["team_id"], name: "index_projects_on_team_id", using: :btree
+    t.index ["user_id"], name: "index_projects_on_user_id", using: :btree
   end
 
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

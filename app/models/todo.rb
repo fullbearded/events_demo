@@ -5,11 +5,10 @@ class Todo < ApplicationRecord
   belongs_to :user
 
   has_many :events, as: :resource
+  attr_accessor :creator
+  after_save -> (obj) {trigger_add_event user_uid: obj.creator.uid, project_uid: project_uid}
 
   def generate_comments!(user, opts = {})
-    keep_transaction do
-      comment = comments.create!(opts.merge(user_id: user.id))
-      comment.events.build(project_uid: project_uid, user_uid: user.uid).save!
-    end
+    comments.create!(opts.merge(user_id: user.id, creator: user))
   end
 end

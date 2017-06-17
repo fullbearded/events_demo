@@ -15,9 +15,13 @@ if Rails.env.development?
     user.save
   end
 
+  user = User.find_by name: 'jerry'
+
   # 2. import teams
   %w(superman spider_man).each do |name|
-    Team.find_or_create_by name: name
+    team = Team.find_or_initialize_by name: name
+    team.creator = user
+    team.save
   end
 
   # 3. binding user & team, all user joins team
@@ -30,7 +34,7 @@ if Rails.env.development?
   # 4. import project && create default todolist
   superman_team = Team.find_by name: 'superman'
   {zod: 'Genering zod', krypton: 'superman homeplanet'}.each do |name, desc|
-    superman_team.generate_project!(name, description: desc)
+    superman_team.generate_project!(user, name: name, description: desc)
   end
 
   # 5. set the authority: jerry is admin, alice is member, tom is visitor

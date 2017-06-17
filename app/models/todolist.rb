@@ -4,11 +4,18 @@ class Todolist < ApplicationRecord
   belongs_to :user
 
   has_many :events, as: :resource
+  attr_accessor :creator
+  after_save -> (obj) {
+    trigger_add_event user_uid: obj.creator.uid, project_uid: obj.project.uid
+  }
 
   def generate_todos!(user, opts = {})
     keep_transaction do
-      todo = todos.create!(opts.merge(user_id: user.id, project_id: project_id, project_uid: project.uid))
-      todo.events.add.build(project_uid: project.uid, user_uid: user.uid).save!
+      attrs = {
+        user_id: user.id, project_id: project_id,
+        project_uid: project.uid, creator: user
+      }.merge(opts)
+      todos.create!(attrs)
     end
   end
 

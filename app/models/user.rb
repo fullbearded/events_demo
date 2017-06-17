@@ -9,9 +9,9 @@ class User < ApplicationRecord
   has_and_belongs_to_many :teams
   belongs_to :user_group
   has_many :todos
+  has_many :projects
+  has_many :todolists
 
-  def add_role!(project, role)
-    
-  end
+
 
 end
