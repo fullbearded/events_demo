@@ -103,8 +103,10 @@ ActiveRecord::Schema.define(version: 20170615162744) do
   create_table "teams", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "uid",        limit: 32, default: "", null: false, comment: "unique id"
     t.string   "name",                  default: "", null: false, comment: "team name"
+    t.datetime "deleted_at"
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
+    t.index ["deleted_at"], name: "index_teams_on_deleted_at", using: :btree
   end
 
   create_table "teams_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

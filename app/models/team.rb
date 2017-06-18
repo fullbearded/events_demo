@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Team < ApplicationUidRecord
+  acts_as_paranoid
+
   has_and_belongs_to_many :users
   has_many :projects
   has_many :tags
@@ -16,6 +18,7 @@ class Team < ApplicationUidRecord
       attrs = {team_uid: uid, user_id: user.id, user_uid: user.uid, operator: user}.merge(opts)
       project = projects.new(attrs)
       project.generate_default_todolist! if project.save!
+      project
     end
   end
 

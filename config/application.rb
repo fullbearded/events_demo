@@ -21,8 +21,6 @@ module EventsDemo
     config.time_zone = 'Beijing'
     config.active_record.default_timezone = :local
 
-    config.active_record.raise_in_transactional_callbacks = true
-
     config.eager_load_paths += %W(#{config.root}/lib)
 
     config.i18n.load_path += Dir[config.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
