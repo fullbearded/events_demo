@@ -6,6 +6,7 @@ class CreateEvents < ActiveRecord::Migration[5.0]
       t.integer :action, null: false, default: 0, limit: 1, comment: 'resource action, such as todo assign etc.'
       t.references :user, null: false, default: 0, comment: 'event author, user creater'
       t.references :project, null: false, default: 0, comment: 'belongs_to project'
+      t.text :extras, comment: 'store resources practical attributes'
       t.timestamps
     end
   end

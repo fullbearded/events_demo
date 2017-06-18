@@ -3,12 +3,11 @@ class Event < ApplicationUidRecord
 
   belongs_to :user
   belongs_to :project
-  has_one :event_assigner
 
   ROUTES_RELATION = {todo: :project_todo_path, todolist: :project_todolist_path, project: :team_project_path, team: :team_projects}.freeze
 
   belongs_to :resource, polymorphic: true
-  enum action: %i(add move remove close reopen assign rename edit reply)
+  enum action: %i(add move remove close reopen assign rename edit reply change_deadline)
 
   scope :by_team, -> (team_uid, user) do
     where(project_id: Project.with_deleted.where(team_uid: team_uid).pluck(:id))
@@ -40,6 +39,22 @@ class Event < ApplicationUidRecord
     Event.actions_i18n[:reply]
   end
 
+  def todo_change_deadline_action_display
+    message = -> (from, to) {
+      configuration = {true_false: :close, false_true: :add, true_true: :assign}
+      key = configuration["#{from.present?}_#{to.present?}".to_sym]
+      I18n.t "todo_change_deadline_action_display.#{key}",
+             from: format_deadline_display(from), to: format_deadline_display(to), resource_name: resource_name
+    }
+    parsed_extras = extras.load
+    message.call parsed_extras[:from], parsed_extras[:to]
+  end
+
+  def format_deadline_display(time)
+    no_deadline_set = I18n.t(:no_deadline_set)
+    time.nil? ? no_deadline_set : I18n.l(Time.parse(time))
+  end
+
   def todo_assign_action_display
     message = -> (assigner, assignee) {
       configuration = {/\d+_0$/ => :close, /^0_\d+/ => :add, /\d+_\d+/ => :assign}
@@ -47,7 +62,9 @@ class Event < ApplicationUidRecord
       I18n.t "todo_assign_action_display.#{key}",
              assignee_name: assignee.try(:name), assigner_name: assigner.try(:name), resource_name: resource_name
     }
-    message.call event_assigner.assigner, event_assigner.assignee
+    parsed_extras = extras.load
+    users = User.where(id: parsed_extras.values).inject({}) {|h, v| h[v.id] = v; h}
+    message.call users[parsed_extras[:assigner_id]], users[parsed_extras[:assignee_id]]
   end
 
   def comment_resource_name

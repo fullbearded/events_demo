@@ -6,9 +6,7 @@ class Todo < ApplicationUidRecord
   has_many :comments
   belongs_to :user
 
-  has_one :assignee, -> { where(resource_type: Todo.name).order(id: :desc)},
-          class_name: 'EventAssigner', foreign_key: :resource_id
-  has_many :event_assigners, as: :resource
+  belongs_to :assignee, class_name: 'User', foreign_key: :assignee_id
 
   has_many :events, as: :resource
   attr_accessor :operator
@@ -21,6 +19,13 @@ class Todo < ApplicationUidRecord
 
   enum status: {add: 0, close: 1}
 
+  def to_reopen!
+    keep_transaction do
+      add!
+      events.reopen.build(user_id: operator.try(:id).to_i, project_id: project_id).save!
+    end
+  end
+
   # special action
   def to_close!
     keep_transaction do
@@ -31,8 +36,11 @@ class Todo < ApplicationUidRecord
 
   def to_assign!(assigner_id, assignee_id)
     keep_transaction do
-      event = events.assign.create!(user_id: operator.try(:id).to_i, project_id: project_id)
-      event_assigners.build(assigner_id: assigner_id, assignee_id: assignee_id, event_id: event.id).save!
+      update assignee_id: assignee_id
+      events.assign.create!(
+        user_id: operator.try(:id).to_i, project_id: project_id,
+        extras: {assigner_id: assigner_id, assignee_id: assignee_id}.to_json
+      )
     end
   end
 
@@ -40,6 +48,16 @@ class Todo < ApplicationUidRecord
     keep_transaction do
       update todolist_id: direct_todolist_id
       events.move.build(user_id: operator.try(:id).to_i, project_id: project_id).save!
+    end
+  end
+
+  def to_change_deadline!(from, to)
+    keep_transaction do
+      update deadline: to
+      events.change_deadline.create!(
+        user_id: operator.try(:id).to_i, project_id: project_id,
+        extras: {from: from, to: to}.to_json
+      )
     end
   end
 

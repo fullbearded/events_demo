@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170616083652) do
+ActiveRecord::Schema.define(version: 20170615162744) do
 
   create_table "accesses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", comment: "user for project permission" do |t|
     t.integer  "user_id"
@@ -48,27 +48,16 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.index ["user_id"], name: "index_comments_on_user_id", using: :btree
   end
 
-  create_table "event_assigners", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "event_id",      default: 0, null: false
-    t.string   "resource_type"
-    t.integer  "resource_id",                            comment: "resources"
-    t.integer  "assigner_id",   default: 0, null: false
-    t.integer  "assignee_id",   default: 0, null: false
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.index ["event_id"], name: "index_event_assigners_on_event_id", using: :btree
-    t.index ["resource_type", "resource_id"], name: "index_event_assigners_on_resource_type_and_resource_id", using: :btree
-  end
-
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "uid",           limit: 32, default: "", null: false, comment: "unique id"
+    t.string   "uid",           limit: 32,    default: "", null: false, comment: "unique id"
     t.string   "resource_type"
-    t.integer  "resource_id",                                        comment: "event resources"
-    t.integer  "action",        limit: 1,  default: 0,  null: false, comment: "resource action, such as todo assign etc."
-    t.integer  "user_id",                  default: 0,  null: false, comment: "event author, user creater"
-    t.integer  "project_id",               default: 0,  null: false, comment: "belongs_to project"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.integer  "resource_id",                                           comment: "event resources"
+    t.integer  "action",        limit: 1,     default: 0,  null: false, comment: "resource action, such as todo assign etc."
+    t.integer  "user_id",                     default: 0,  null: false, comment: "event author, user creater"
+    t.integer  "project_id",                  default: 0,  null: false, comment: "belongs_to project"
+    t.text     "extras",        limit: 65535,                           comment: "store resources practical attributes"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.index ["project_id"], name: "index_events_on_project_id", using: :btree
     t.index ["resource_type", "resource_id"], name: "index_events_on_resource_type_and_resource_id", using: :btree
     t.index ["user_id"], name: "index_events_on_user_id", using: :btree
@@ -146,6 +135,7 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.integer  "priority",                  default: 0,  null: false, comment: "task priority"
     t.integer  "status",                    default: 0,  null: false, comment: "0 add 1 close"
     t.datetime "deadline"
+    t.integer  "assignee_id",               default: 0,  null: false
     t.integer  "user_id",                   default: 0,  null: false, comment: "create user"
     t.integer  "todolist_id",               default: 0,  null: false
     t.integer  "project_id",                default: 0,  null: false

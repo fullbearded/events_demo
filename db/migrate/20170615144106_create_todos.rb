@@ -7,6 +7,7 @@ class CreateTodos < ActiveRecord::Migration[5.0]
       t.integer :priority, null: false, default: 0, comment: 'task priority'
       t.integer :status, null: false, default: 0, comment: '0 add 1 close'
       t.datetime :deadline
+      t.integer :assignee_id, null: false, default: 0
 
       t.references :user,  null: false, default: 0, comment: 'create user'
       t.references :todolist, null: false, default: 0

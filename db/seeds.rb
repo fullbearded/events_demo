@@ -68,21 +68,22 @@ if Rails.env.development?
 
   # 8.2.1 jerry build a task, assign to tom
   tom = User.find_by name: 'tom'
-  todo.to_assign! todo.assignee.try(:assignee_id).to_i, tom.id
+  todo.to_assign! todo.assignee.try(:id).to_i, tom.id
   # 8.2.2 jerry change the tom to alice
   alice = User.find_by name: 'alice'
-  todo.to_assign! todo.reload.assignee.try(:assignee_id).to_i, alice.id
+  todo.to_assign! todo.reload.assignee.try(:id).to_i, alice.id
   # 8.2.3 jerry cancel the task assigness
-  todo.to_assign! todo.reload.assignee.try(:assignee_id).to_i, 0
+  todo.to_assign! todo.reload.assignee.try(:id).to_i, 0
 
-  # 8.3 finished todo
+  # 8.3 change deadline
+  todo.to_change_deadline! todo.deadline, 1.days.since
+  todo.to_change_deadline! todo.deadline, 10.days.since
+  todo.to_change_deadline! todo.deadline, nil
+
+  # 8.4 finished todo
   todo.to_close!
 
-  # 8.4 remove todo
+  # 8.5 remove todo
   todo.destroy
-
-
-
-
 
 end
