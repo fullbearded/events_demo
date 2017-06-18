@@ -14,17 +14,15 @@ class Event < ApplicationUidRecord
     add move remove close reopen assign rename edit reply change_deadline
   ]
 
-  scope :by_team, lambda do |team_uid, _user|
-    where(project_id: Project.with_deleted.where(team_uid: team_uid).pluck(:id))
-  end
+  scope :by_team, ->(team_uid, _user) { where(project_id: Project.with_deleted.where(team_uid: team_uid).pluck(:id)) }
 
-  scope :search, lambda do |opts|
+  scope :search, lambda { |opts|
     [User, Project].each do |model|
       key = model.to_s.downcase
       opts["#{key}_id"] = mode.find_by(uid: opts["#{key}_uid"]) if opts["#{key}_uid"].present?
     end
     where(opts.slice(:user_id, :project_id))
-  end
+  }
 
   def action_display
     send("#{resource_type.downcase}_#{action}_action_display")
@@ -53,12 +51,7 @@ class Event < ApplicationUidRecord
     configuration = { true_false: :close, false_true: :add, true_true: :assign }
     key = configuration["#{from.present?}_#{to.present?}".to_sym]
     I18n.t "todo_change_deadline_action_display.#{key}",
-           from: format_deadline_display(from), to: format_deadline_display(to), resource_name: resource_name
-  end
-
-  def format_deadline_display(time)
-    no_deadline_set = I18n.t(:no_deadline_set)
-    time.nil? ? no_deadline_set : I18n.l(Time.parse(time))
+           from: Utils::Time.new(from).format, to: Utils::Time.new(to).format, resource_name: resource_name
   end
 
   def todo_assign_action_display
@@ -75,16 +68,20 @@ class Event < ApplicationUidRecord
   end
 
   def comment_resource_name
-    resource.todo.model_name.human
+    comment_resource.model_name.human
   end
 
   def comment_resource_detail
-    url = url_helpers.project_todo_path(resource.todo.project_uid, resource.todo)
+    url = url_helpers.project_todo_path(comment_resource.project_uid, comment_resource)
     {
       name: resource.todo.name,
       content: resource.content,
       link: "#{url}##{resource.uid}"
     }
+  end
+
+  def comment_resource
+    resource.todo
   end
 
   def todo_resource_detail
