@@ -40,9 +40,14 @@ class Event < ApplicationUidRecord
     Event.actions_i18n[:reply]
   end
 
-  # TODO
   def todo_assign_action_display
-
+    message = -> (assigner, assignee) {
+      configuration = {/\d+_0$/ => :close, /^0_\d+/ => :add, /\d+_\d+/ => :assign}
+      key = configuration.find{|reg, v| "#{assigner.try(:id).to_i}_#{assignee.try(:id).to_i}".match reg}.last
+      I18n.t "todo_assign_action_display.#{key}",
+             assignee_name: assignee.try(:name), assigner_name: assigner.try(:name), resource_name: resource_name
+    }
+    message.call event_assigner.assigner, event_assigner.assignee
   end
 
   def comment_resource_name
@@ -78,19 +83,23 @@ class Event < ApplicationUidRecord
     {name: resource.name, content: nil}
   end
 
+  def resource_name
+    resource_type.constantize.model_name.human
+  end
+
   # NOTE: if the resource has special display, need generate a special method,
   #       such as: comment_add_action_display or todo_assign_resource_display
   %i(todo todolist project team).each do |type|
 
     # resource model name
     define_method "#{type}_resource_name" do
-      resource_type.constantize.model_name.human
+      resource_name
     end
 
     # resource action name
-    %i(add remove close edit).each do |action|
+    %i(add remove close edit move).each do |action|
       define_method "#{type}_#{action}_action_display" do
-        action_i18n
+         "#{action_i18n} #{resource_name}"
       end
     end
   end

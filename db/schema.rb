@@ -49,12 +49,15 @@ ActiveRecord::Schema.define(version: 20170616083652) do
   end
 
   create_table "event_assigners", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "event_id",    default: 0, null: false
-    t.integer  "assigner_id", default: 0, null: false
-    t.integer  "assignee_id", default: 0, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "event_id",      default: 0, null: false
+    t.string   "resource_type"
+    t.integer  "resource_id",                            comment: "resources"
+    t.integer  "assigner_id",   default: 0, null: false
+    t.integer  "assignee_id",   default: 0, null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.index ["event_id"], name: "index_event_assigners_on_event_id", using: :btree
+    t.index ["resource_type", "resource_id"], name: "index_event_assigners_on_resource_type_and_resource_id", using: :btree
   end
 
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

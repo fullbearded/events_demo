@@ -1,6 +1,10 @@
 zh-CN:
   please_login: 继续操作前，请登录！
   default_todolist: 任务
+  todo_assign_action_display:
+    close: "取消了%{assigner_name}的 %{resource_name}"
+    add: "给 %{assignee_name}指派了 %{resource_name}"
+    assign: "把 %{assigner_name}的任务指派给%{assignee_name}"
   
 
 
