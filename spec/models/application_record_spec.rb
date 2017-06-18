@@ -19,4 +19,10 @@ describe ApplicationRecord do
       expect(@project.events.remove.exists?).to be_truthy
     end
   end
+
+  context '#to_param' do
+    it 'all model to_param will be override by uid' do
+      expect(team.to_param).to eq(team.uid)
+    end
+  end
 end

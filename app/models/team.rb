@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Team < ApplicationUidRecord
-  acts_as_paranoid
+  acts_as_paranoid without_default_scope: true
 
   has_and_belongs_to_many :users
   has_many :projects

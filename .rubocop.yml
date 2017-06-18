@@ -17,5 +17,6 @@ AllCops:
     - 'script/**/*'
     - 'Rakefile'
     - 'lib/utils/*'
+    - 'spec/**/*'
 Documentation:
   Enabled: false
