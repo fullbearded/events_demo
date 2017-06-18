@@ -34,6 +34,6 @@ class ApplicationController < ActionController::Base
   end
 
   def format_page
-    [params[:page] || 1, 100].min
+    [params[:page] || 1, 100].map(&:to_i).min
   end
 end

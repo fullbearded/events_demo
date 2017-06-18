@@ -30,7 +30,7 @@ class Event < ApplicationUidRecord
   end
   
   def resource_detail
-    send("#{resource_type.downcase}_resource_detail")
+    @resource_detail ||= send("#{resource_type.downcase}_resource_detail")
   end
 
   private

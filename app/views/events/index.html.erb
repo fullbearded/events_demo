@@ -1,20 +1,13 @@
 <div class="container events pt100">
   <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped" data-team-uid="<%= current_team.uid %>"
+           data-events-path="<%= team_events_path(current_team, format: 'json') %>">
       <tr>
         <th>操作人</th>
         <th>事件</th>
         <th>操作对象</th>
         <th>评论</th>
       </tr>
-      <% @events && @events.each do |event| %>
-        <tr>
-          <th><%= event.user.name %></th>
-          <th><%= event.action_display %></th>
-          <th><%= event.resource_name_display %>：<%= link_to event.resource_detail[:name], event.resource_detail[:link] %></th>
-          <th><%= event.resource_detail[:content] %></th>
-        </tr>
-      <% end %>
     </table>
   </div>
 </div>

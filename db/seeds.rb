@@ -37,7 +37,12 @@ if Rails.env.development?
     superman_team.generate_project!(user, name: name, description: desc)
   end
 
-  puts '5. set the authority: jerry is admin, alice is member, tom is visitor'
+  puts %q(
+    5. set the authority:
+      in superman team zod project: jerry is admin, alice is member, tom is visitor,
+      in superman team krypton: jerry is member, tom is visitor
+  )
+
 
   puts '6. import todos'
   todolist = Project.find_by(name: 'zod').todolists.first
@@ -55,7 +60,6 @@ if Rails.env.development?
   todo = todolist.todos.first
   commenter = User.find_by name: 'tom'
   todo.generate_comments! commenter, content: 'I love superman'
-
 
   puts '8. events traces'
   todo.operator = user
