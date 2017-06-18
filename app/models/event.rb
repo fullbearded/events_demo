@@ -36,7 +36,7 @@ class Event < ApplicationUidRecord
   private
 
   def comment_add_action_display
-    Event.actions_i18n[:reply]
+    "#{Event.actions_i18n[:reply]} #{resource.todo.model_name.human}"
   end
 
   def todo_change_deadline_action_display
