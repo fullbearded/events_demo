@@ -1,2 +1,2 @@
-class Attachment < ApplicationRecord
+class Attachment < ApplicationIdRecord
 end

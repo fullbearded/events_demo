@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class Team < ApplicationRecord
+class Team < ApplicationUidRecord
   has_and_belongs_to_many :users
   has_many :projects
   has_many :tags
 
   has_many :events, as: :resource
   attr_accessor :operator
-  after_save -> (obj) { trigger_add_event user_id: obj.operator.try(:id).to_i }
+  after_create -> (obj) { trigger_add_event user_id: obj.operator.try(:id).to_i }
 
   validates_presence_of :name
 

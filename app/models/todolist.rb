@@ -1,4 +1,4 @@
-class Todolist < ApplicationRecord
+class Todolist < ApplicationUidRecord
   acts_as_paranoid without_default_scope: true
 
   has_many :todos
@@ -7,7 +7,7 @@ class Todolist < ApplicationRecord
 
   has_many :events, as: :resource
   attr_accessor :operator
-  after_save -> (obj) {
+  after_create -> (obj) {
     trigger_add_event user_id: obj.operator.try(:id).to_i.to_i, project_id: obj.project_id
   }
   after_destroy -> (obj) {

@@ -1,8 +1,9 @@
-class Event < ApplicationRecord
+class Event < ApplicationUidRecord
   delegate :url_helpers, to: 'Rails.application.routes'
 
   belongs_to :user
   belongs_to :project
+  has_one :event_assigner
 
   ROUTES_RELATION = {todo: :project_todo_path, todolist: :project_todolist_path, project: :team_project_path, team: :team_projects}.freeze
 

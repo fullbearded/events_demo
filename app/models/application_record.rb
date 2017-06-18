@@ -3,8 +3,6 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  before_create :generate_uid
-
   def generate_uid
     self.uid = SecureRandom.uuid.delete('-')
   end

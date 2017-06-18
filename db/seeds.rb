@@ -58,9 +58,31 @@ if Rails.env.development?
 
 
   # 8. events traces
-  # 8.1 remove todo
   todo.operator = user
+  #  create a new todolist
+  project = Project.find_by(name: 'zod')
+  project.operator = user
+  other_todolist = project.generate_todolist!('zod new todolist')
+  # 8.1 move task to new todolist
+  todo.to_move! other_todolist.id
+
+  # 8.2.1 jerry build a task, assign to tom
+  tom = User.find_by name: 'tom'
+  todo.to_assign! todo.assignee.try(:assignee_id), tom.id
+  # 8.2.2 jerry change the tom to alice
+  alice = User.find_by name: 'alice'
+  todo.to_assign! todo.assignee.try(:assignee_id), alice.id
+  # 8.2.3 jerry cancel the task assigness
+  todo.to_assign! todo.assignee.try(:assignee_id), 0
+
+  # 8.3 finished todo
+  todo.to_close!
+
+  # 8.4 remove todo
   todo.destroy
+
+
+
 
 
 end

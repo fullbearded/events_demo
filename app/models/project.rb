@@ -1,4 +1,4 @@
-class Project < ApplicationRecord
+class Project < ApplicationUidRecord
   acts_as_paranoid without_default_scope: true
 
   belongs_to :team
@@ -16,7 +16,11 @@ class Project < ApplicationRecord
     trigger_remove_event user_id: obj.operator.try(:id).to_i, project_id: obj.id
   }
 
+  def generate_todolist!(name)
+    todolists.create! name: name, user_id: operator.id, operator: operator, project_uid: uid
+  end
+  
   def generate_default_todolist!
-    todolists.create! name: I18n.t(:default_todolist), user_id: operator.id, operator: operator, project_uid: uid
+    generate_todolist! I18n.t(:default_todolist)
   end
 end

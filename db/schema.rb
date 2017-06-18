@@ -49,10 +49,12 @@ ActiveRecord::Schema.define(version: 20170616083652) do
   end
 
   create_table "event_assigners", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "event_id",    default: 0, null: false
     t.integer  "assigner_id", default: 0, null: false
     t.integer  "assignee_id", default: 0, null: false
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.index ["event_id"], name: "index_event_assigners_on_event_id", using: :btree
   end
 
   create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -139,7 +141,8 @@ ActiveRecord::Schema.define(version: 20170616083652) do
     t.string   "name",                      default: "", null: false, comment: "name"
     t.text     "description", limit: 65535
     t.integer  "priority",                  default: 0,  null: false, comment: "task priority"
-    t.integer  "status",                    default: 0,  null: false, comment: "0 active 1 finished"
+    t.integer  "status",                    default: 0,  null: false, comment: "0 add 1 close"
+    t.datetime "deadline"
     t.integer  "user_id",                   default: 0,  null: false, comment: "create user"
     t.integer  "todolist_id",               default: 0,  null: false
     t.integer  "project_id",                default: 0,  null: false

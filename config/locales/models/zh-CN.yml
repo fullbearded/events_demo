@@ -11,6 +11,10 @@ zh-CN:
         rename: 重命名
         edit: 编辑
         reply: 回复
+    todo:
+      status:
+        add: 创建
+        close: 完成
   activerecord:
     models:
       project: 项目

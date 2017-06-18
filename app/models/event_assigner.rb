@@ -1,2 +1,2 @@
-class EventAssigner < ApplicationRecord
+class EventAssigner < ApplicationIdRecord
 end

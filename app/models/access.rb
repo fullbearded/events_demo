@@ -1,2 +1,2 @@
-class Access < ApplicationRecord
+class Access < ApplicationIdRecord
 end
