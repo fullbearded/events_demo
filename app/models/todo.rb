@@ -10,14 +10,14 @@ class Todo < ApplicationUidRecord
 
   has_many :events, as: :resource
   attr_accessor :operator
-  after_create -> (obj) {
+  after_create lambda { |obj|
     trigger_add_event user_id: obj.operator.try(:id).to_i, project_id: project_id
   }
-  after_destroy -> (obj) {
+  after_destroy lambda { |obj|
     trigger_remove_event user_id: obj.operator.try(:id).to_i, project_id: project_id
   }
 
-  enum status: {add: 0, close: 1}
+  enum status: { add: 0, close: 1 }
 
   def to_reopen!
     keep_transaction do
@@ -39,7 +39,7 @@ class Todo < ApplicationUidRecord
       update assignee_id: assignee_id
       events.assign.create!(
         user_id: operator.try(:id).to_i, project_id: project_id,
-        extras: {assigner_id: assigner_id, assignee_id: assignee_id}.to_json
+        extras: { assigner_id: assigner_id, assignee_id: assignee_id }.to_json
       )
     end
   end
@@ -56,7 +56,7 @@ class Todo < ApplicationUidRecord
       update deadline: to
       events.change_deadline.create!(
         user_id: operator.try(:id).to_i, project_id: project_id,
-        extras: {from: from, to: to}.to_json
+        extras: { from: from, to: to }.to_json
       )
     end
   end

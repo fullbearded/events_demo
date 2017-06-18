@@ -6,11 +6,14 @@ Style/AsciiComments:
   Enabled: false
 Style/NumericLiterals:
   Enabled: false
-
+Metrics/LineLength:
+  Max: 120
 AllCops:
   Include:
     - '**/config.ru'
   Exclude:
+    - 'Gemfile'
+    - 'Gemfile.lock'
     - 'bin/*'
     - 'db/**/*'
     - 'config/**/*'

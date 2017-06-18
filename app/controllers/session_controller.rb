@@ -3,8 +3,7 @@ class SessionController < ApplicationController
   skip_before_action :require_login, :require_team, except: [:destroy]
   layout false
 
-  def new
-  end
+  def new; end
 
   def create
     if login(params[:username], params[:password], params[:remember].present?)

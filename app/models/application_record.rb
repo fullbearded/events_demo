@@ -13,14 +13,13 @@ class ApplicationRecord < ActiveRecord::Base
 
   def keep_transaction(&block)
     ActiveRecord::Base.transaction do
-      block.call if block.present?
+      yield if block.present?
     end
   end
 
-  %w(add remove).each do |action|
+  %w[add remove].each do |action|
     define_method "trigger_#{action}_event" do |opts = {}|
-      self.events.send(action).build(opts).save
+      events.send(action).build(opts).save
     end
   end
-
 end

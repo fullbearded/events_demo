@@ -11,5 +11,4 @@ class User < ApplicationUidRecord
   has_many :todos
   has_many :projects
   has_many :todolists
-
 end

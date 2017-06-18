@@ -7,10 +7,10 @@ class Todolist < ApplicationUidRecord
 
   has_many :events, as: :resource
   attr_accessor :operator
-  after_create -> (obj) {
+  after_create lambda { |obj|
     trigger_add_event user_id: obj.operator.try(:id).to_i.to_i, project_id: obj.project_id
   }
-  after_destroy -> (obj) {
+  after_destroy lambda { |obj|
     trigger_remove_event user_id: obj.operator.try(:id).to_i, project_id: obj.project_id
   }
 
@@ -23,5 +23,4 @@ class Todolist < ApplicationUidRecord
       todos.create!(attrs)
     end
   end
-
 end

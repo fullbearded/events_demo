@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find_by(params.permit(:team_uid, :uid))
   end
-  
+
   private
 
   def set_current_team

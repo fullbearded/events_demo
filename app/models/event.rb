@@ -4,19 +4,24 @@ class Event < ApplicationUidRecord
   belongs_to :user
   belongs_to :project
 
-  ROUTES_RELATION = {todo: :project_todo_path, todolist: :project_todolist_path, project: :team_project_path, team: :team_projects}.freeze
+  ROUTES_RELATION = {
+    todo: :project_todo_path, todolist: :project_todolist_path,
+    project: :team_project_path, team: :team_projects
+  }.freeze
 
   belongs_to :resource, polymorphic: true
-  enum action: %i(add move remove close reopen assign rename edit reply change_deadline)
+  enum action: %i[
+    add move remove close reopen assign rename edit reply change_deadline
+  ]
 
-  scope :by_team, -> (team_uid, user) do
+  scope :by_team, lambda do |team_uid, _user|
     where(project_id: Project.with_deleted.where(team_uid: team_uid).pluck(:id))
   end
 
-  scope :search, -> (opts) do
+  scope :search, lambda do |opts|
     [User, Project].each do |model|
-      core_key = model.to_s.downcase
-      opts["#{core_key}_id"] = mode.find_by(uid: opts["#{core_key}_uid"]) if opts["#{core_key}_uid"].present?
+      key = model.to_s.downcase
+      opts["#{key}_id"] = mode.find_by(uid: opts["#{key}_uid"]) if opts["#{key}_uid"].present?
     end
     where(opts.slice(:user_id, :project_id))
   end
@@ -28,7 +33,7 @@ class Event < ApplicationUidRecord
   def resource_name_display
     send("#{resource_type.downcase}_resource_name")
   end
-  
+
   def resource_detail
     @resource_detail ||= send("#{resource_type.downcase}_resource_detail")
   end
@@ -40,14 +45,15 @@ class Event < ApplicationUidRecord
   end
 
   def todo_change_deadline_action_display
-    message = -> (from, to) {
-      configuration = {true_false: :close, false_true: :add, true_true: :assign}
-      key = configuration["#{from.present?}_#{to.present?}".to_sym]
-      I18n.t "todo_change_deadline_action_display.#{key}",
-             from: format_deadline_display(from), to: format_deadline_display(to), resource_name: resource_name
-    }
     parsed_extras = extras.load
-    message.call parsed_extras[:from], parsed_extras[:to]
+    deadline_translate parsed_extras[:from], parsed_extras[:to]
+  end
+
+  def deadline_translate(from, to)
+    configuration = { true_false: :close, false_true: :add, true_true: :assign }
+    key = configuration["#{from.present?}_#{to.present?}".to_sym]
+    I18n.t "todo_change_deadline_action_display.#{key}",
+           from: format_deadline_display(from), to: format_deadline_display(to), resource_name: resource_name
   end
 
   def format_deadline_display(time)
@@ -56,15 +62,16 @@ class Event < ApplicationUidRecord
   end
 
   def todo_assign_action_display
-    message = -> (assigner, assignee) {
-      configuration = {/\d+_0$/ => :close, /^0_\d+/ => :add, /\d+_\d+/ => :assign}
-      key = configuration.find{|reg, v| "#{assigner.try(:id).to_i}_#{assignee.try(:id).to_i}".match reg}.last
-      I18n.t "todo_assign_action_display.#{key}",
-             assignee_name: assignee.try(:name), assigner_name: assigner.try(:name), resource_name: resource_name
-    }
     parsed_extras = extras.load
-    users = User.where(id: parsed_extras.values).inject({}) {|h, v| h[v.id] = v; h}
-    message.call users[parsed_extras[:assigner_id]], users[parsed_extras[:assignee_id]]
+    users = User.where(id: parsed_extras.values).each_with_object({}) { |v, h| h[v.id] = v; }
+    assign_translate users[parsed_extras[:assigner_id]], users[parsed_extras[:assignee_id]]
+  end
+
+  def assign_translate(assigner, assignee)
+    configuration = { /\d+_0$/ => :close, /^0_\d+/ => :add, /\d+_\d+/ => :assign }
+    key = configuration.find { |reg, _v| "#{assigner.try(:id).to_i}_#{assignee.try(:id).to_i}".match reg }.last
+    I18n.t "todo_assign_action_display.#{key}",
+           assignee_name: assignee.try(:name), assigner_name: assigner.try(:name), resource_name: resource_name
   end
 
   def comment_resource_name
@@ -97,7 +104,7 @@ class Event < ApplicationUidRecord
   end
 
   def default_detail
-    {name: resource.name, content: nil}
+    { name: resource.name, content: nil }
   end
 
   def resource_name
@@ -106,19 +113,17 @@ class Event < ApplicationUidRecord
 
   # NOTE: if the resource has special display, need generate a special method,
   #       such as: comment_add_action_display or todo_assign_resource_display
-  %i(todo todolist project team).each do |type|
-
+  %i[todo todolist project team].each do |type|
     # resource model name
     define_method "#{type}_resource_name" do
       resource_name
     end
 
     # resource action name
-    %i(add remove close edit move).each do |action|
+    %i[add remove close edit move].each do |action|
       define_method "#{type}_#{action}_action_display" do
-         "#{action_i18n} #{resource_name}"
+        "#{action_i18n} #{resource_name}"
       end
     end
   end
-
 end
