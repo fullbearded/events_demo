@@ -10,8 +10,8 @@
       <% @events && @events.each do |event| %>
         <tr>
           <th><%= event.user.name %></th>
-          <th><%= event.action_display %>了<%= event.resource_display %></th>
-          <th><%= event.resource_display %>： <%= event.resource_detail[:name] %></th>
+          <th><%= event.action_display %>了<%= event.resource_name_display %></th>
+          <th><%= event.resource_name_display %>：<%= link_to event.resource_detail[:name], event.resource_detail[:link] %></th>
           <th><%= event.resource_detail[:content] %></th>
         </tr>
       <% end %>

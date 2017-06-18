@@ -17,6 +17,6 @@ class Project < ApplicationRecord
   }
 
   def generate_default_todolist!
-    todolists.create! name: I18n.t(:default_todolist), user_id: operator.id, operator: operator
+    todolists.create! name: I18n.t(:default_todolist), user_id: operator.id, operator: operator, project_uid: uid
   end
 end

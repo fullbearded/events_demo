@@ -121,13 +121,14 @@ ActiveRecord::Schema.define(version: 20170616083652) do
   end
 
   create_table "todolists", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "uid",        limit: 32, default: "", null: false
-    t.string   "name",       limit: 50, default: "", null: false
-    t.integer  "project_id",            default: 0,  null: false
-    t.integer  "user_id",               default: 0,  null: false, comment: "create user"
+    t.string   "uid",         limit: 32, default: "", null: false
+    t.string   "name",        limit: 50, default: "", null: false
+    t.integer  "project_id",             default: 0,  null: false
+    t.string   "project_uid",            default: "", null: false, comment: "redundancy column, project_uid"
+    t.integer  "user_id",                default: 0,  null: false, comment: "create user"
     t.datetime "deleted_at"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.index ["deleted_at"], name: "index_todolists_on_deleted_at", using: :btree
     t.index ["project_id"], name: "index_todolists_on_project_id", using: :btree
     t.index ["user_id"], name: "index_todolists_on_user_id", using: :btree

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   resources :projects, only: [], param: :uid do
     resources :todos, only: [:show], param: :uid
+    resources :todolist, only: [:show], param: :uid
   end
 
   root 'events#index'
