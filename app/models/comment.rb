@@ -8,11 +8,9 @@ class Comment < ApplicationUidRecord
   has_many :events, as: :resource
   attr_accessor :operator
   after_create lambda { |obj|
-    trigger_add_event user_id: obj.operator.try(:id).to_i,
-                      project_id: obj.todo.project_id
+    trigger_add_event user_id: obj.operator.try(:id).to_i, project_id: obj.todo.project_id
   }
   after_destroy lambda { |obj|
-    trigger_remove_event user_id: obj.operator.try(:id).to_i,
-                         project_id: obj.todo.project_id
+    trigger_remove_event user_id: obj.operator.try(:id).to_i, project_id: obj.todo.project_id
   }
 end

@@ -3,23 +3,20 @@ class Event < ApplicationUidRecord
 
   belongs_to :user
   belongs_to :project
-
-  ROUTES_RELATION = {
-    todo: :project_todo_path, todolist: :project_todolist_path,
-    project: :team_project_path, team: :team_projects
-  }.freeze
-
   belongs_to :resource, polymorphic: true
+
   enum action: %i[
     add move remove close reopen assign rename edit reply change_deadline
   ]
 
-  scope :by_team, ->(team_uid, _user) { where(project_id: Project.with_deleted.where(team_uid: team_uid).pluck(:id)) }
+  # TODO: filter by access
+  scope :by_team, ->(team_uid, _user) { where(project_id: Project.where(team_uid: team_uid).pluck(:id)) }
 
   scope :search, lambda { |opts|
     [User, Project].each do |model|
       key = model.to_s.downcase
-      opts["#{key}_id"] = mode.find_by(uid: opts["#{key}_uid"]) if opts["#{key}_uid"].present?
+      uid_key = "#{key}_uid".to_sym
+      opts["#{key}_id".to_sym] = model.find_by(uid: opts[uid_key]) if opts[uid_key].present?
     end
     where(opts.slice(:user_id, :project_id))
   }
@@ -67,6 +64,10 @@ class Event < ApplicationUidRecord
            assignee_name: assignee.try(:name), assigner_name: assigner.try(:name), resource_name: resource_name
   end
 
+  def comment_resource
+    resource.todo
+  end
+
   def comment_resource_name
     comment_resource.model_name.human
   end
@@ -78,10 +79,6 @@ class Event < ApplicationUidRecord
       content: resource.content,
       link: "#{url}##{resource.uid}"
     }
-  end
-
-  def comment_resource
-    resource.todo
   end
 
   def todo_resource_detail

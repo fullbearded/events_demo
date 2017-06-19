@@ -5,7 +5,7 @@ class Todo < ApplicationUidRecord
   belongs_to :tag
   has_many :comments
   belongs_to :user
-
+  belongs_to :todolist
   belongs_to :assignee, class_name: 'User', foreign_key: :assignee_id
 
   has_many :events, as: :resource

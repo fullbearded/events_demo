@@ -16,9 +16,7 @@ class Team < ApplicationUidRecord
   def generate_project!(user, opts = {})
     keep_transaction do
       attrs = { team_uid: uid, user_id: user.id, user_uid: user.uid, operator: user }.merge(opts)
-      project = projects.new(attrs)
-      project.generate_default_todolist! if project.save!
-      project
+      projects.create!(attrs)
     end
   end
 end
