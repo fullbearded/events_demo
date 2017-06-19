@@ -15,11 +15,17 @@ autoload_events = (page) ->
           "<td>#{event.content}</td></tr>"
     $('table').append(html.join(''))
 
-$(document).ready ->
-  autoload_events($('table').data('page'))
+$(window).scroll ->
+  if $(window).scrollTop() == $(document).height() - $(window).height()
+    next = $('table').data('page') + 1
+    if next <= $('table').data('next-page')
+      autoload_events next
 
-  $(window).scroll ->
-    if $(window).scrollTop() == $(document).height() - $(window).height()
-      next = $('table').data('page') + 1
-      if next <= $('table').data('next-page')
-        autoload_events next
+ready = ->
+  if window.location.href.match(/events/)
+    $('table').data('page', 1)
+    $('table').data('next-page', 2)
+    autoload_events($('table').data('page'))
+
+$(document).on('turbolinks:load', ready)
+
