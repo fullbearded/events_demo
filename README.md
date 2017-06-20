@@ -28,3 +28,6 @@ rails s
 
 visit: http://localhost:3000
 
+username: 15828566956
+password: 12345678
+
