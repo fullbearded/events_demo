@@ -12,9 +12,4 @@ class SessionController < ApplicationController
       halt!('用户名或密码错误！')
     end
   end
-
-  def destroy
-    logout
-    redirect_to_with_success('安全退出！', :login)
-  end
 end

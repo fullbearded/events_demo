@@ -11,7 +11,7 @@ require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+# ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
