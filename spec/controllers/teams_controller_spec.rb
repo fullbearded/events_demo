@@ -14,7 +14,7 @@ describe TeamsController do
     end
 
     it 'if team save success, should get success http code' do
-      post :create, params: {name: ''}, session: {team_id: team.id}
+      post :create, params: {name: 'test'}, session: {team_id: team.id}
       expect(response.status).to eq(200)
     end
   end

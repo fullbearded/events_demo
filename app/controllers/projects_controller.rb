@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   skip_before_action :require_team
-  before_action :set_current_team
+  before_action :set_current_team, only: [:index]
 
   def index
     @projects = Project.where(params.permit(:team_uid))

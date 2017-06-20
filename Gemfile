@@ -34,4 +34,5 @@ group :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'simplecov', require: false
+  gem 'rails-controller-testing'
 end
